@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>504</x>
+      <y>441</y>
+      <w>306</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/Piece/
+--
+-appartientJUn: bool
+--
++AppartientJUn {R}
+--
+/+CheckDeplacement(x: int,y: int, xDest,yDest, out elimine:Piece): bool/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>450</x>
+      <y>594</y>
+      <w>189</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>Pion
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>540</x>
+      <y>522</y>
+      <w>27</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>675</x>
+      <y>594</y>
+      <w>189</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>Dame
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>702</x>
+      <y>522</y>
+      <w>27</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>882</x>
+      <y>423</y>
+      <w>234</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>Damier
+--
+NOMBRE_CASES_X: int = 10
+NOMBRE_CASES_Y: int = 10
+--
+-cases: Piece[,]
+-tourJoueurUn: true
+--
++Cases {R}
++Tour: {R}
+--
++Innit(): void
++Deplacement(pcs :Piece,x :int,y :int)
++static Promouvoir(pcs: Pion)
+-CaseValide(int x, int y) :bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>801</x>
+      <y>477</y>
+      <w>99</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0 1</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+</diagram>

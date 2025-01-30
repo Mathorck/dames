@@ -56,7 +56,7 @@
     </Compile>
     <Compile Include="jeu\Damier\Case.cs" />
     <Compile Include="jeu\Damier\Damier.cs" />
-    <Compile Include="jeu\Pion\DefaultPion.cs" />
+    <Compile Include="jeu\Pion\DefautPion.cs" />
     <Compile Include="jeu\Pion\Pion.cs" />
     <Compile Include="jeu\Pion\PionColor.cs" />
     <Compile Include="Program.cs" />
