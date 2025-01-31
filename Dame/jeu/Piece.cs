@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,7 @@ namespace Dame.jeu
     public abstract class Piece
     {
         private bool appartientJ1;
+        [JsonProperty]
         public bool AppartientJ1 { get; private set; }
 
         public Piece(bool appartientJ1)

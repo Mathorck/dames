@@ -13,6 +13,11 @@ namespace Dame.jeu.Pieces
 
         }
 
+        public Dames Evolution()
+        {
+            return new Dames(AppartientJ1);
+        }
+
         public override bool CheckDeplacement(int x, int y, int destX, int destY, Piece[,] pcss, out Piece elimine)
         {
             int deltaX = destX - x;
@@ -21,18 +26,21 @@ namespace Dame.jeu.Pieces
 
             int direction = AppartientJ1 ? 1 : -1;
 
-            if (deltaX == 1 && deltaY == direction)
+            if ((deltaX == 1 || deltaX == -1) && deltaY == direction && pcss[destX, destY] == null)
             {
                 return true;
             }
 
-            if (deltaX == 2 && deltaY == 2 * direction)
+            if ((deltaX == 2 || deltaX == -2) && (deltaY == 2 || deltaY == -2))
             {
                 int midX = x + deltaX / 2;
                 int midY = y + deltaY / 2;
 
-                if (pcss[midX,midY] is Piece pcsCool && pcsCool.AppartientJ1 != AppartientJ1)
+                if (pcss[midX, midY] != null && pcss[midX, midY].AppartientJ1 != AppartientJ1 && pcss[destX, destY] == null)
+                {
+                    elimine = pcss[midX, midY];
                     return true;
+                }
             }
 
             return false;

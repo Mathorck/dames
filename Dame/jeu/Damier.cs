@@ -1,9 +1,10 @@
 ﻿using Dame.jeu.Pieces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Dame.jeu
 {
@@ -11,6 +12,7 @@ namespace Dame.jeu
     {
         const int NOMBRE_CASES_X = 10;
         const int NOMBRE_CASES_Y = 10;
+        public const string SAVE_PATH = "./save.json";
 
         private Piece[,] pieces;
         private bool tourJ1;
@@ -19,9 +21,9 @@ namespace Dame.jeu
         {
             get
             {
-                return (Piece[,])pieces.Clone();
+                return pieces;
             }
-            private set 
+            private set
             {
                 pieces = value;
             }
@@ -38,25 +40,169 @@ namespace Dame.jeu
             }
         }
 
+        /// <summary>
+        /// Méthode qui permet d'initialiser le damier avec tout les pions etc...
+        /// </summary>
         public void Init()
         {
-            Pieces = new Piece[NOMBRE_CASES_X,NOMBRE_CASES_X];
-
-            for (int x = 0; x < Pieces.GetLength(0); x++) 
+            pieces = new Piece[NOMBRE_CASES_X, NOMBRE_CASES_Y];
+            tourJ1 = true;
+            for (int x = 0; x < Pieces.GetLength(0); x++)
                 for (int y = 0; y < Pieces.GetLength(1); y++)
                 {
-                    if (CaseValide(x,y) && y<=2 && y>=NOMBRE_CASES_Y-3)
-                        pieces[x,y] = new Pion(y <= 2);
+                    if (CaseValide(x, y) && (y <= 3 || y >= NOMBRE_CASES_Y - 4))
+                        pieces[x, y] = new Pion(y <= 3);
+                    else
+                        pieces[x, y] = null;
                 }
-            
         }
 
-        public bool Deplacement(int x,int y,int xDest,int yDest)
+        /// <summary>
+        /// Méthode qui permet le déplacement d'un pion sur le damier
+        /// </summary>
+        /// <param name="x">Position X du pion</param>
+        /// <param name="y">Position Y du pion</param>
+        /// <param name="xDest">Position X de la destination</param>
+        /// <param name="yDest">Position Y de la destination</param>
+        /// <returns>Retourne si le déplacement a été fait</returns>
+        public bool Deplacement(int x, int y, int xDest, int yDest)
         {
+            if (Pieces[x, y] == null)
+                return false;
 
-            return false;
+            Piece pieceDepart = Pieces[x, y];
+
+            if (pieceDepart.AppartientJ1 != tourJ1)
+                return false;
+
+            Piece pieceEliminee = null;
+            if (!pieceDepart.CheckDeplacement(x, y, xDest, yDest, Pieces, out pieceEliminee))
+                return false;
+
+            if (pieceEliminee != null)
+            {
+                for (int i = 0; i < pieces.GetLength(0); i++)
+                {
+                    for (int j = 0; j < pieces.GetLength(1); j++)
+                    {
+                        if (pieces[i, j] == pieceEliminee)
+                        {
+                            pieces[i, j] = null;
+                            tourJ1 = !tourJ1; // truc de neuille
+                            break;
+                        }
+                    }
+                }
+            }
+
+            pieces[xDest, yDest] = pieceDepart;
+            pieces[x, y] = null;
+
+            if ((tourJ1 && yDest == NOMBRE_CASES_Y - 1) || (!tourJ1 && yDest == 0) && pieces[xDest, yDest] is Pion)
+            {
+                pieces[xDest, yDest] = ((Pion)pieces[xDest, yDest]).Evolution();
+            }
+
+            tourJ1 = !tourJ1;
+
+            return true;
         }
 
-        private bool CaseValide(int x, int y) => (x % 2 == 0 && y % 2 == 0);
+        /// <summary>
+        /// Méthode qui permet de calculer si la case saisie est valide
+        /// </summary>
+        /// <param name="x">Composante en X</param>
+        /// <param name="y">Composante en Y</param>
+        /// <returns>Si la case est valide</returns>
+        public bool CaseValide(int x, int y) => (x + y) % 2 != 0;
+
+        /// <summary>
+        /// Sauvegarde la partie dans un fichier Json
+        /// </summary>
+        public void Save()
+        {
+            if (!File.Exists(SAVE_PATH))
+                File.Create(SAVE_PATH).Close();
+
+            JArray piecesArray = new JArray();
+
+            for (int i = 0; i < Pieces.GetLength(0); i++)
+            {
+                JArray rowArray = new JArray();
+                for (int j = 0; j < Pieces.GetLength(1); j++)
+                {
+                    if (Pieces[i, j] == null)
+                    {
+                        rowArray.Add(null);
+                    }
+                    else
+                    {
+                        JObject pieceObject = JObject.FromObject(Pieces[i, j]);
+                        pieceObject.Add("Type", Pieces[i, j].GetType().Name);
+                        rowArray.Add(pieceObject);
+                    }
+                }
+                piecesArray.Add(rowArray);
+            }
+
+            var jsonObject = new JObject
+            {
+                ["TourJ1"] = tourJ1,
+                ["Pieces"] = piecesArray
+            };
+
+            File.WriteAllText(SAVE_PATH, jsonObject.ToString(Formatting.Indented));
+        }
+
+        /// <summary>
+        /// Méthode qui permet d'initialiser une partie a l'aide d'un fichier sauvegarde (Json)
+        /// </summary>
+        public void Load()
+        {
+            if (!File.Exists(SAVE_PATH))
+                return;
+            try
+            {
+                string txt = File.ReadAllText(SAVE_PATH);
+                var jsonObject = JsonConvert.DeserializeObject<JObject>(txt);
+
+                this.tourJ1 = jsonObject["TourJ1"].ToObject<bool>();
+
+                var piecesArray = jsonObject["Pieces"].ToObject<JArray>(); // Tableau 2D sous forme de JArray
+                int rows = piecesArray.Count;
+                int cols = piecesArray[0].Count();
+
+                this.Pieces = new Piece[rows, cols];
+
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        JToken pieceToken = piecesArray[i][j];
+                        if (pieceToken.Type == JTokenType.Null)
+                        {
+                            Pieces[i, j] = null;
+                        }
+                        else
+                        {
+                            string type = pieceToken["Type"].ToString();
+                            bool appartientJ1 = pieceToken["AppartientJ1"].ToObject<bool>();
+
+                            if (type == "Pion")
+                                Pieces[i, j] = new Pion(appartientJ1);
+                            else if (type == "Dames")
+                                Pieces[i, j] = new Dames(appartientJ1);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fichier de sauvegarde corompu création d'une nouvelle partie");
+                File.Delete(SAVE_PATH);
+                this.Init();
+            }
+        }
+
     }
 }
