@@ -41,6 +41,19 @@ namespace Dames
             string[] coo = btn.Tag.ToString().Replace("{","").Replace("}","").Split(';');
             int x = int.Parse(coo[0]);
             int y = int.Parse(coo[1]);
+            int gagnant = damier.CheckWin();
+
+            
+            if (gagnant != 0) 
+            {
+                if (gagnant == 1) 
+                    MessageBox.Show("Le joueur Noir à Gagné");
+                else if (gagnant == 2) 
+                    MessageBox.Show("Le joueur Blanc à Gagné");
+                damier.Init();
+                return;
+            }
+            
 
             if (btn == premierBtn)
             {

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +11,10 @@ namespace Dames.jeu
         private bool appartientJ1;
         public bool AppartientJ1 { get { return appartientJ1; } private set { appartientJ1 = value; } }
 
+        /// <summary>
+        /// Constructeur d'une pièce
+        /// </summary>
+        /// <param name="appartientJ1">à quel équipe il appartient</param>
         public Piece(bool appartientJ1)
         {
             AppartientJ1 = appartientJ1;

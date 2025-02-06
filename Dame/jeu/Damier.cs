@@ -109,6 +109,34 @@ namespace Dames.jeu
         }
 
         /// <summary>
+        /// méthode qui vérifie si quelqu'un a gagné
+        /// </summary>
+        /// <returns>0 si personne n'a gagné, 1 si J1 à gagné et si J2 à gagné</returns>
+        public int CheckWin()
+        {
+            int nbPionJ1 = 0;
+            int nbPionJ2 = 0;
+
+            foreach (Piece piece in pieces) 
+            {
+                if (piece == null)
+                    continue;
+
+                if (piece.AppartientJ1)
+                    nbPionJ1++;                
+                else if (!piece.AppartientJ1)
+                    nbPionJ2++;
+            }
+
+            if (nbPionJ1 == 0)
+                return 1;
+            else if (nbPionJ2 == 0)
+                return 2;
+
+            return 0;
+        }
+
+        /// <summary>
         /// Méthode qui permet de calculer si la case saisie est valide
         /// </summary>
         /// <param name="x">Composante en X</param>
