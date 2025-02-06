@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Dame.Properties {
+namespace Dames.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

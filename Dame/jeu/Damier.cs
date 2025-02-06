@@ -1,4 +1,4 @@
-﻿using Dame.jeu.Pieces;
+﻿using Dames.jeu.Pieces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Dame.jeu
+namespace Dames.jeu
 {
     public class Damier
     {
@@ -98,7 +98,7 @@ namespace Dame.jeu
             pieces[xDest, yDest] = pieceDepart;
             pieces[x, y] = null;
 
-            if ((tourJ1 && yDest == NOMBRE_CASES_Y - 1) || (!tourJ1 && yDest == 0) && pieces[xDest, yDest] is Pion)
+            if ((pieceDepart.AppartientJ1 && yDest == NOMBRE_CASES_Y - 1) || (!pieceDepart.AppartientJ1 && yDest == 0) && pieces[xDest, yDest] is Pion)
             {
                 pieces[xDest, yDest] = ((Pion)pieces[xDest, yDest]).Evolution();
             }
@@ -157,13 +157,14 @@ namespace Dame.jeu
         /// <summary>
         /// Méthode qui permet d'initialiser une partie a l'aide d'un fichier sauvegarde (Json)
         /// </summary>
-        public void Load()
+        /// <param name="path">Chemin</param>
+        public void Load(string path)
         {
-            if (!File.Exists(SAVE_PATH))
+            if (!File.Exists(path))
                 return;
             try
             {
-                string txt = File.ReadAllText(SAVE_PATH);
+                string txt = File.ReadAllText(path);
                 var jsonObject = JsonConvert.DeserializeObject<JObject>(txt);
 
                 this.tourJ1 = jsonObject["TourJ1"].ToObject<bool>();
@@ -187,21 +188,28 @@ namespace Dame.jeu
                         {
                             string type = pieceToken["Type"].ToString();
                             bool appartientJ1 = pieceToken["AppartientJ1"].ToObject<bool>();
-
                             if (type == "Pion")
                                 Pieces[i, j] = new Pion(appartientJ1);
-                            else if (type == "Dames")
-                                Pieces[i, j] = new Dames(appartientJ1);
+                            else if (type == "Dame")
+                                Pieces[i, j] = new Dame(appartientJ1);
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Fichier de sauvegarde corompu création d'une nouvelle partie");
-                File.Delete(SAVE_PATH);
+                MessageBox.Show("le Fichier de sauvegarde est corompu création d'une nouvelle partie");
+                File.Delete(path);
                 this.Init();
             }
+        }
+
+        /// <summary>
+        /// Méthode qui permet d'initialiser une partie a l'aide d'un fichier sauvegarde (Json)
+        /// </summary>
+        public void Load()
+        {
+            Load(SAVE_PATH);
         }
 
     }

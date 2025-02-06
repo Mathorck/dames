@@ -1,4 +1,4 @@
-﻿namespace Dame
+﻿namespace Dames
 {
     partial class JeuPrincipal
     {

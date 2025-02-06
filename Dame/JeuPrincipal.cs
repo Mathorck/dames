@@ -1,5 +1,5 @@
-﻿using Dame.jeu;
-using Dame.jeu.Pieces;
+﻿using Dames.jeu;
+using Dames.jeu.Pieces;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -13,12 +13,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Dame
+namespace Dames
 {
     public partial class JeuPrincipal : Form
     {
         private Damier damier = new Damier();
-        private bool partie = true;
         private Button premierBtn = null;
         private List<Button> buttons;
 

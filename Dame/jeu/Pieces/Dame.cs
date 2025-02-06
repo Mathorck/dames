@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dame.jeu.Pieces
+namespace Dames.jeu.Pieces
 {
-    public class Dames : Piece
+    public class Dame : Piece
     {
-        public Dames(bool appartientJ1) : base(appartientJ1)
+        public Dame(bool appartientJ1) : base(appartientJ1)
         {
 
         }
@@ -29,10 +29,11 @@ namespace Dame.jeu.Pieces
                 {
                     int xx = x + i * directionX;
                     int yy = y + i * directionY;
-                    
 
                     if (pcss[xx, yy] != null)
                     {
+                        if (pcss[xx, yy].AppartientJ1 == this.AppartientJ1)
+                            return false;
                         nbrElim++;
                         elimine = pcss[xx, yy];
                     }

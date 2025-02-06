@@ -59,7 +59,7 @@
     </Compile>
     <Compile Include="jeu\Damier.cs" />
     <Compile Include="jeu\Piece.cs" />
-    <Compile Include="jeu\Pieces\Dames.cs" />
+    <Compile Include="jeu\Pieces\Dame.cs" />
     <Compile Include="jeu\Pieces\Pion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

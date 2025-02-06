@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dame.jeu.Pieces
+namespace Dames.jeu.Pieces
 {
     public class Pion : Piece
     {
@@ -13,9 +13,9 @@ namespace Dame.jeu.Pieces
 
         }
 
-        public Dames Evolution()
+        public Dame Evolution()
         {
-            return new Dames(AppartientJ1);
+            return new Dame(AppartientJ1);
         }
 
         public override bool CheckDeplacement(int x, int y, int destX, int destY, Piece[,] pcss, out Piece elimine)
