@@ -75,9 +75,12 @@ namespace Dames.jeu
             if (pieceDepart.AppartientJ1 != tourJ1)
                 return false;
 
-            Piece pieceEliminee = null;
-            if (!pieceDepart.CheckDeplacement(x, y, xDest, yDest, Pieces, out pieceEliminee))
+            var deplacementsPossibles = pieceDepart.DeplacementsPossibles(Pieces);
+
+            if (!deplacementsPossibles.ContainsKey((xDest, yDest)))
                 return false;
+
+            Piece pieceEliminee = deplacementsPossibles[(xDest, yDest)];
 
             if (pieceEliminee != null)
             {

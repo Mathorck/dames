@@ -99,6 +99,16 @@ namespace Dames
         private void UpdateBtn()
         {
             Piece[,] Pieces = damier.Pieces;
+            Dictionary<(int, int), Piece> dico = new Dictionary<(int, int), Piece>();
+
+            if (premierBtn != null)
+            {
+                int[] xxyy = GetCooFromBtn(Pieces, premierBtn);
+                int xxxx = xxyy[0];
+                int yyyy = xxyy[1];
+
+                dico = Pieces[xxxx,yyyy].DeplacementsPossibles(Pieces); 
+            }
 
             foreach (Button btn in buttons)
             {
@@ -106,16 +116,19 @@ namespace Dames
                 int x = xy[0];
                 int y = xy[1];
 
-                if (Pieces[x, y] == null)
+                if (x >= 0 && x < Pieces.GetLength(0) && y >= 0 && y < Pieces.GetLength(1))
                 {
-                    btn.BackgroundImage = damier.CaseValide(x, y) ? caseN : caseB;
-                }
-                else
-                {
-                    if (Pieces[x,y] is Pion)
-                        btn.BackgroundImage = Pieces[x, y].AppartientJ1 ? pionN : pionB;
-                    else 
-                        btn.BackgroundImage = Pieces[x, y].AppartientJ1 ? dameN : dameB;
+                    if (Pieces[x, y] == null)
+                    {
+                        btn.BackgroundImage = damier.CaseValide(x, y) ? caseN : caseB;
+                    }
+                    else
+                    {
+                        if (Pieces[x, y] is Pion)
+                            btn.BackgroundImage = Pieces[x, y].AppartientJ1 ? pionN : pionB;
+                        else
+                            btn.BackgroundImage = Pieces[x, y].AppartientJ1 ? dameN : dameB;
+                    }
                 }
 
                 if (btn == premierBtn)
@@ -125,8 +138,31 @@ namespace Dames
                 }
                 else
                 {
-                    btn.FlatAppearance.BorderColor = Color.FromArgb(30, 30, 40);
-                    btn.FlatAppearance.BorderSize = 1;
+                    bool estCaseAManger = false;
+                    foreach (var kvp in dico)
+                    {
+                        if (kvp.Value != null && Pieces[x, y] == kvp.Value)
+                        {
+                            estCaseAManger = true;
+                            break;
+                        }
+                    }
+
+                    if (estCaseAManger)
+                    {
+                        btn.FlatAppearance.BorderColor = Color.LightGreen;
+                        btn.FlatAppearance.BorderSize = 1;
+                    }
+                    else if (dico.ContainsKey((x, y)))
+                    {
+                        btn.FlatAppearance.BorderColor = Color.SkyBlue;
+                        btn.FlatAppearance.BorderSize = 1;
+                    }
+                    else
+                    {
+                        btn.FlatAppearance.BorderColor = Color.FromArgb(30, 30, 40);
+                        btn.FlatAppearance.BorderSize = 1;
+                    }
                 }
             }
             lbl_Tour.Text = $"Au tour de {(damier.TourJ1 ? "noir" : "blanc")}";

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dames.jeu.Pieces
 {
@@ -19,7 +15,7 @@ namespace Dames.jeu.Pieces
             int deltaY = destY - y;
             elimine = null;
 
-            if ((deltaX == deltaY || deltaX == deltaY*-1 || deltaX*-1 == deltaY || deltaX*-1 == deltaY * -1) && pcss[destX, destY] == null)
+            if ((deltaX == deltaY || deltaX == deltaY * -1 || deltaX * -1 == deltaY || deltaX * -1 == deltaY * -1) && pcss[destX, destY] == null)
             {
                 int directionX = destX > x ? 1 : -1;
                 int directionY = destY > y ? 1 : -1;
@@ -37,14 +33,13 @@ namespace Dames.jeu.Pieces
                         nbrElim++;
                         elimine = pcss[xx, yy];
                     }
-                        
                 }
 
                 if (nbrElim > 1)
                 {
                     elimine = null;
                     return false;
-                }    
+                }
                 return true;
             }
             return false;

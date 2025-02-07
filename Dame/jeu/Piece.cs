@@ -20,6 +20,7 @@ namespace Dames.jeu
             AppartientJ1 = appartientJ1;
         }
 
+
         /// <summary>
         /// Vérifie le déplacement d'une piece
         /// </summary>
@@ -31,5 +32,49 @@ namespace Dames.jeu
         /// <param name="elimine">Piece eliminé (pas toujour instancié)</param>
         /// <returns>si le déplacement est valide</returns>
         public abstract bool CheckDeplacement(int x, int y, int destX, int destY, Piece[,] pcss, out Piece elimine);
+
+
+
+        public Dictionary<(int, int), Piece> DeplacementsPossibles(Piece[,] pieces)
+        {
+            int xthis = -1;
+            int ythis = -1;
+            Dictionary<(int, int), Piece> output = new Dictionary<(int, int), Piece>();
+            Dictionary<(int, int), Piece> prises = new Dictionary<(int, int), Piece>();
+
+            for (int x = 0; x < pieces.GetLength(0); x++)
+                for (int y = 0; y < pieces.GetLength(1); y++)
+                    if (pieces[x, y] == this)
+                    {
+                        xthis = x;
+                        ythis = y;
+                        break;
+                    }
+
+            if (xthis == -1 || ythis == -1)
+                throw new Exception("Cette pièce n'existe pas dans la liste");
+
+            for (int x = 0; x < pieces.GetLength(0); x++)
+                for (int y = 0; y < pieces.GetLength(1); y++)
+                {
+                    if (x == xthis && y == ythis) continue;
+
+                    if (pieces[xthis,ythis].CheckDeplacement(xthis, ythis, x, y, pieces, out Piece elimine))
+                    {
+                        if (elimine != null)
+                        {
+                            prises.Add((x, y), elimine);
+                        }
+                        else
+                        {
+                            output.Add((x, y), elimine);
+                        }
+                    }
+                }
+
+            if (prises.Count > 0)
+                return prises;
+            return output;
+        }
     }
 }
